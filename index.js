@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const corsOPTIONS = {
-  origin: ["http://localhost:3000"],
+  origin: ["http://localhost:3000", "https://senshi-matsuri.vercel.app"],
 };
 
 app.use(cors(corsOPTIONS));
