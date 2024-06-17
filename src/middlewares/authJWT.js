@@ -14,6 +14,7 @@ const catchError = (err, res) => {
 const verifyToken = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
   const token = req.cookies.accessToken;
+  console.log(refreshToken, "refreshToken");
   if (!refreshToken || !token) {
     return res.status(404).send({ message: "No token provided!" });
   }
@@ -37,7 +38,8 @@ const isAdmin = async (req, res, next) => {
   if (error || !user) {
     return res.status(404).send({ message: "User Not found." });
   }
-  if (user.role === 2) {
+
+  if (user.roleId === 2) {
     next();
     return;
   }

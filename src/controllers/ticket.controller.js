@@ -93,7 +93,6 @@ exports.deleteTicketById = async (req, res) => {
 exports.updateTicketById = async (req, res) => {
   try {
     if (req.body.status === "approved") {
-      console.log(req.params.id);
       while (true) {
         let token = generateToken(6);
         const { data: response, error } = await supabase.from("ticket").select().eq("token", token);
