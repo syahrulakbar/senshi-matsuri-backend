@@ -184,7 +184,6 @@ exports.adminSignIn = async (req, res) => {
 exports.signOut = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refreshToken;
-    console.log(refreshToken);
     if (!refreshToken) {
       return res.status(400).json({
         message: "Refresh token not found",
@@ -309,7 +308,6 @@ exports.currentUser = async (req, res) => {
 };
 
 exports.getAllUsers = async (req, res) => {
-  console.log(req.cookies, "cookies");
   try {
     const { data: users, error } = await supabase
       .from("users")

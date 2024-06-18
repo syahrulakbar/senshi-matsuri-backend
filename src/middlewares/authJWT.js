@@ -14,7 +14,6 @@ const catchError = (err, res) => {
 const verifyToken = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
   const token = req.cookies.accessToken;
-  console.log(refreshToken, "refreshToken");
   if (!refreshToken || !token) {
     return res.status(404).send({ message: "No token provided!" });
   }

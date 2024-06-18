@@ -93,6 +93,32 @@ exports.deleteTicketById = async (req, res) => {
 exports.updateTicketById = async (req, res) => {
   try {
     if (req.body.status === "approved") {
+      const { data: ticketData, error: ticketError } = await supabase
+        .from("ticket")
+        .select()
+        .eq("id", req.params.id)
+        .single();
+      if (ticketError) {
+        console.error("Error get data ticket:", ticketError);
+        return res.status(500).json({ error: "Failed to get data" });
+      }
+
+      if (ticketData.status === "approved" && ticketData.token) {
+        const { data: response, error } = await supabase
+          .from("ticket")
+          .update({ ...req.body, updated_at: new Date() })
+          .eq("id", req.params.id);
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        return res.status(200).json({
+          message: "Ticket updated successfully",
+          data: response,
+        });
+      }
+
       while (true) {
         let token = generateToken(6);
         const { data: response, error } = await supabase.from("ticket").select().eq("token", token);
