@@ -5,6 +5,7 @@ module.exports = (app) => {
   app.use((req, res, next) => {
     next();
   });
+  app.get("/api/dashboard", eventController.getAllDataEventAndTicket);
   app.get("/api/event", eventController.getAllEvent);
   app.get("/api/event/:id", eventController.checkEventStatus);
   app.post("/api/event", eventController.addEvent);

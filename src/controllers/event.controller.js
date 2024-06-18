@@ -1,5 +1,52 @@
 const supabase = require("../utils/supabase");
 
+exports.getAllDataEventAndTicket = async (req, res) => {
+  try {
+    const { data: response, error } = await supabase
+      .from("ticket")
+      .select(
+        `
+      eventId, status,
+      event:events(event_name)
+    `,
+      )
+      .ilike("event.event_name", `%${req.query.eventName}%`);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const dashboard = response.reduce((acc, curr) => {
+      const { event_name } = curr.event;
+      const { status } = curr;
+
+      if (!acc[event_name]) {
+        acc[event_name] = {
+          event_name,
+          status: {
+            approved: 0,
+            pending: 0,
+            rejected: 0,
+          },
+          total: 0,
+        };
+      }
+
+      acc[event_name].status[status] = (acc[event_name].status[status] || 0) + 1;
+      acc[event_name].total += 1;
+      return acc;
+    }, {});
+
+    return res.status(200).json({
+      message: "Get all event and ticket successfully",
+      data: Object.values(dashboard),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Error while get all event and ticket" });
+  }
+};
+
 exports.addEvent = async (req, res) => {
   try {
     const { data: response, error } = await supabase
