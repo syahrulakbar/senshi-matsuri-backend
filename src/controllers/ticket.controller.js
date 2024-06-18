@@ -70,7 +70,8 @@ exports.getAllTicket = async (req, res) => {
       event:events(*)
     `,
       )
-      .or(`name.ilike.%${req.query.name}%,token.ilike.%${req.query.token}%`);
+      .or(`name.ilike.%${req.query.name}%,token.ilike.%${req.query.token}%`)
+      .order("created_at", { ascending: false });
 
     if (error) {
       throw new Error(error.message);

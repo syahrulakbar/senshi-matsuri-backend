@@ -312,7 +312,8 @@ exports.getAllUsers = async (req, res) => {
     const { data: users, error } = await supabase
       .from("users")
       .select(`id, name, email, roleId, role:roles(*)`)
-      .or(`name.ilike.%${req.query.name}%,email.ilike.%${req.query.email}%`);
+      .or(`name.ilike.%${req.query.name}%,email.ilike.%${req.query.email}%`)
+      .order("created_at", { ascending: false });
 
     if (error) {
       return res.status(500).json({

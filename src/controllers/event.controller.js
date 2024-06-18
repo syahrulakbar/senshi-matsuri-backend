@@ -96,7 +96,9 @@ exports.getAllEvent = async (req, res) => {
     const { data: response, error } = await supabase
       .from("events")
       .select("*")
-      .ilike("event_name", `%${req.query.eventName}%`);
+      .ilike("event_name", `%${req.query.eventName}%`)
+      .order("created_at", { ascending: false });
+
     if (error) {
       throw new Error(error.message);
     }
