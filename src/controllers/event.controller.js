@@ -20,6 +20,30 @@ exports.addEvent = async (req, res) => {
   }
 };
 
+exports.checkEventStatus = async (req, res) => {
+  try {
+    const { data: event, error: eventError } = await supabase
+      .from("events")
+      .select()
+      .eq("id", req.params.id)
+      .single();
+
+    if (eventError) {
+      console.error("Error get data event:", eventError);
+      return res.status(500).json({ error: "Failed to get data" });
+    }
+    if (event.end_date < new Date()) return res.status(400).json({ error: "Event has ended" });
+
+    return res.status(200).json({
+      message: "Event is still ongoing",
+      data: event,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Error while get event by id" });
+  }
+};
+
 exports.getAllEvent = async (req, res) => {
   try {
     const { data: response, error } = await supabase

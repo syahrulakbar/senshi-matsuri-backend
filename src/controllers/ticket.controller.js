@@ -4,6 +4,18 @@ const generateToken = require("../utils/generateToken");
 
 exports.addTicket = async (req, res) => {
   try {
+    const { data: event, error: eventError } = await supabase
+      .from("events")
+      .select()
+      .eq("id", req.body.eventId)
+      .single();
+
+    if (eventError) {
+      console.error("Error get data event:", eventError);
+      return res.status(500).json({ error: "Failed to get data" });
+    }
+    if (event.end_date < new Date()) return res.status(400).json({ error: "Event has ended" });
+
     const { data: response, error } = await supabase
       .from("ticket")
       .insert([{ ...req.body, status: "pending" }])
@@ -42,7 +54,10 @@ exports.getTicketById = async (req, res) => {
       message: "Get ticket by id successfully",
       data: response,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Error while get ticket by id" });
+  }
 };
 
 exports.getAllTicket = async (req, res) => {

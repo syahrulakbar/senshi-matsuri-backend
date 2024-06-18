@@ -6,6 +6,7 @@ module.exports = (app) => {
     next();
   });
   app.get("/api/event", eventController.getAllEvent);
+  app.get("/api/event/:id", eventController.checkEventStatus);
   app.post("/api/event", eventController.addEvent);
   app.delete("/api/event/:id", eventController.deleteEventById);
   app.patch("/api/event/:id", eventController.updateEventById);
