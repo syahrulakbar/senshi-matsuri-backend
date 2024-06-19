@@ -93,11 +93,18 @@ exports.checkEventStatus = async (req, res) => {
 
 exports.getAllEvent = async (req, res) => {
   try {
-    const { data: response, error } = await supabase
+    const ITEMS_PER_PAGE = 5;
+    const offset = (req.query.page || 1 - 1) * ITEMS_PER_PAGE;
+    const {
+      data: response,
+      error,
+      count,
+    } = await supabase
       .from("events")
-      .select("*")
+      .select("*", { count: "exact" })
       .ilike("event_name", `%${req.query.eventName}%`)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .range(offset, offset + ITEMS_PER_PAGE - 1);
 
     if (error) {
       throw new Error(error.message);
@@ -105,6 +112,7 @@ exports.getAllEvent = async (req, res) => {
     return res.status(200).json({
       message: "Get all event successfully",
       data: response,
+      count,
     });
   } catch (error) {
     console.error(error);
