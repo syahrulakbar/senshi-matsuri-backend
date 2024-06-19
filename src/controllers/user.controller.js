@@ -1,8 +1,184 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const supabase = require("../utils/supabase.js");
+const generateToken = require("../utils/generateToken.js");
+const transporter = require("../utils/mail");
 
 const isProd = process.env.NODE_ENV === "production";
+
+exports.verifyToken = async (req, res) => {
+  try {
+    const { data: response, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("reset_password", req.params.token);
+
+    if (error) {
+      console.error("Error when verify token reset password", error?.message);
+      return res.status(500).json({
+        message: error?.message || "Error when verify reset password",
+      });
+    }
+
+    if (response.length === 0) {
+      console.error("Error when verify token reset password", error);
+      return res.status(404).json({
+        message: "Token Not Found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Token Found",
+    });
+  } catch (error) {
+    console.error("Error when verify token reset password", error);
+    return res.status(500).json({
+      message: error?.message || "Error when verify token reset password",
+    });
+  }
+};
+
+exports.verifyResetPassword = async (req, res) => {
+  try {
+    const { data: response, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("reset_password", req.params.token)
+      .single();
+
+    if (error) {
+      console.error("Error when verify reset password", error);
+      return res.status(500).json({
+        message: error?.message || "Error when verify reset password",
+      });
+    }
+    if (!response) {
+      console.error("Error when verify reset password", error);
+      return res.status(404).json({
+        message: "Token Not Found",
+      });
+    }
+    const { reset_password_expires } = response;
+    if (reset_password_expires < new Date().getTime()) {
+      console.error("Error when verify reset password", error);
+      return res.status(404).json({
+        message: "Token Expired",
+      });
+    }
+    const { password } = req.body;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const { data: responseUpdate, error: errorUpdate } = await supabase
+      .from("users")
+      .update({ password: hashedPassword, reset_password: null, reset_password_expires: null })
+      .eq("reset_password", req.params.token);
+
+    if (errorUpdate) {
+      console.error("Error when verify reset password", error);
+
+      return res.status(500).json({
+        message: errorUpdate?.message || "Error when verify reset password",
+      });
+    }
+
+    return res.status(201).json({
+      message: "Reset password success",
+      data: responseUpdate,
+    });
+  } catch (error) {
+    console.error("Error when verify reset password", error);
+    return res.status(500).json({
+      message: error?.message || "Error when verify reset password",
+    });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { data: response, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", req.body.email)
+      .single();
+    if (error) {
+      return res.status(500).json({
+        message: error?.message || "Error when reset password",
+      });
+    }
+    if (!response) {
+      return res.status(404).json({
+        message: "Email Not Registered",
+      });
+    }
+    while (true) {
+      const token = generateToken(10);
+      const { data: response, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("reset_password", token);
+      if (error) {
+        return res.status(500).json({
+          message: error?.message || "Error when reset password",
+        });
+      }
+      if (response.length === 0) {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(now.getDate() + 1);
+        const expiresISO = tomorrow.toISOString();
+        req.body.reset_password = token;
+        req.body.reset_password_expires = expiresISO;
+        break;
+      }
+    }
+    const { name, email } = response;
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Reset your password",
+      html: `
+      <p>Hello, <strong>${name || "Friend"}</strong>!</p>
+      <p>To reset your password, please click on the link below.</p>
+      <a href=${
+        process.env.FRONTEND_URL + "forget-password/" + req.body.reset_password
+      } target="_blank" rel="noopener noreferrer">Reset your password</a>
+      <p>Best regards,<br/>Senshi Matsuri</p>
+    `,
+    };
+
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.error("Error sending email: ", error);
+        throw error;
+      } else {
+        console.log(`Email sent: ${info.response}`);
+        const { data: responseUpdate, error: errorUpdate } = await supabase
+          .from("users")
+          .update(req.body)
+          .eq("email", req.body.email);
+
+        if (errorUpdate) {
+          console.error(errorUpdate?.message || "Error when reset password");
+          return res.status(500).json({
+            message: errorUpdate?.message || "Error when reset password",
+          });
+        }
+
+        return res.status(200).json({
+          message: "Reset password success, check your email for token",
+          data: responseUpdate,
+        });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: error?.message || "Error when reset password",
+    });
+  }
+};
 
 exports.createUser = async (req, res) => {
   try {

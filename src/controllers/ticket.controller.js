@@ -1,6 +1,7 @@
 const supabase = require("../utils/supabase");
 const transporter = require("../utils/mail");
 const generateToken = require("../utils/generateToken");
+const { destroyImage } = require("../utils/cloudinary");
 
 exports.addTicket = async (req, res) => {
   try {
@@ -88,17 +89,35 @@ exports.getAllTicket = async (req, res) => {
 
 exports.deleteTicketById = async (req, res) => {
   try {
+    const { data: ticketData, error: ticketError } = await supabase
+      .from("ticket")
+      .select()
+      .eq("id", req.params.id)
+      .single();
+
+    if (ticketError) {
+      console.error("Error get data ticket:", ticketError);
+      return res.status(500).json({ error: "Failed to get data" });
+    }
+
+    if (ticketData.length === 0) {
+      console.error("Error get data ticket:", ticketError);
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+
+    await destroyImage(ticketData.proof_of_payment);
+
     const { data: response, error } = await supabase
       .from("ticket")
       .delete()
       .eq("id", req.params.id);
 
     if (error) {
-      throw new Error(error.message);
+      console.error("Error get data ticket:", error);
+      return res.status(500).json({ error: "Failed to get data" });
     }
     return res.status(200).json({
       message: "Ticket deleted successfully",
-      data: response,
     });
   } catch (error) {
     console.error(error);
