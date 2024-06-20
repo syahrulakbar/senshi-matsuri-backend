@@ -93,18 +93,24 @@ exports.checkEventStatus = async (req, res) => {
 
 exports.getAllEvent = async (req, res) => {
   try {
-    const ITEMS_PER_PAGE = 5;
-    const offset = (req.query.page || 1 - 1) * ITEMS_PER_PAGE;
-    const {
-      data: response,
-      error,
-      count,
-    } = await supabase
+    // const ITEMS_PER_PAGE = 5;
+    // const offset = (req.query.page - 1) * ITEMS_PER_PAGE;
+    // const { count: totalCount, error: errorData } = await supabase
+    //   .from("events")
+    //   .select("*", { count: "exact" })
+    //   .ilike("event_name", `%${req.query.eventName}%`);
+
+    // if (errorData) {
+    //   console.error(error);
+    //   res.status(500).send({ message: "Error while get all event" });
+    // }
+
+    const { data: response, error } = await supabase
       .from("events")
-      .select("*", { count: "exact" })
-      .ilike("event_name", `%${req.query.eventName}%`)
+      .select("*")
       .order("created_at", { ascending: false })
-      .range(offset, offset + ITEMS_PER_PAGE - 1);
+      .ilike("event_name", `%${req.query.eventName}%`);
+    // .range(offset, Math.min(offset + ITEMS_PER_PAGE - 1, totalCount.count - 1));
 
     if (error) {
       throw new Error(error.message);
@@ -112,7 +118,8 @@ exports.getAllEvent = async (req, res) => {
     return res.status(200).json({
       message: "Get all event successfully",
       data: response,
-      count,
+      // totalCount,
+      // currentPage: req.query.page,
     });
   } catch (error) {
     console.error(error);
