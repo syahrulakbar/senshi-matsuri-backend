@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 const app = express();
 
@@ -24,6 +26,7 @@ require("./src/routes/index.js")(app);
 app.get("/", (req, res) => {
   res.send("Sensi Matsuri API");
 });
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(5000, () => {
   console.log(`Server running on port 5000`);

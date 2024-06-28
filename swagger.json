@@ -1,0 +1,541 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Documentation for the Senshi Matsuri API",
+    "version": "1.0.0",
+    "title": "Senshi Matsuri API"
+  },
+
+  "host": "localhost:5000",
+  "schemes": ["http"],
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "users",
+      "description": "Operations about users"
+    },
+    {
+      "name": "auth",
+      "description": "Operations about auth"
+    },
+    {
+      "name": "events",
+      "description": "Operations about events"
+    },
+    {
+      "name": "tickets",
+      "description": "Operations about tickets"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get all users",
+        "description": "Get all users",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["users"],
+        "summary": "Create a new user",
+        "description": "Create a new user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get a user by id",
+        "description": "Get a user by id",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of user to return",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "Book not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["users"],
+        "summary": "Update a user by id",
+        "description": "Update a user by id",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of user to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "Book not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["users"],
+        "summary": "Delete a user by id",
+        "description": "Delete a user by id",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of user to delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Book not found"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Login a user",
+        "description": "Login a user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "default": "johndoe@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "default": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Register a new user",
+        "description": "Register a new user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/event": {
+      "get": {
+        "tags": ["events"],
+        "summary": "Get all events",
+        "description": "Get all events",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["events"],
+        "summary": "Create a new event",
+        "description": "Create a new event",
+        "parameters": [
+          {
+            "name": "event",
+            "in": "body",
+            "description": "Event object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Event created",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        }
+      }
+    },
+    "/event/{eventId}": {
+      "get": {
+        "tags": ["events"],
+        "summary": "Get a event by id",
+        "description": "Get a event by id",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "ID of event to return",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["events"],
+        "summary": "Update a event by id",
+        "description": "Update a event by id",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "ID of event to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "event",
+            "in": "body",
+            "description": "Event object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["events"],
+        "summary": "Delete a event by id",
+        "description": "Delete a event by id",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "ID of event to delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        }
+      }
+    },
+    "/ticket": {
+      "get": {
+        "tags": ["tickets"],
+        "summary": "Get all tickets",
+        "description": "Get all tickets",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Ticket"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["tickets"],
+        "summary": "Create a new ticket",
+        "description": "Create a new ticket",
+        "parameters": [
+          {
+            "name": "ticket",
+            "in": "body",
+            "description": "Ticket object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Ticket created",
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
+          }
+        }
+      }
+    },
+    "/ticket/{ticketId}": {
+      "get": {
+        "tags": ["tickets"],
+        "summary": "Get a ticket by id",
+        "description": "Get a ticket by id",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "in": "path",
+            "description": "ID of ticket to return",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
+          },
+          "404": {
+            "description": "Ticket not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["tickets"],
+        "summary": "Update a ticket by id",
+        "description": "Update a ticket by id",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "in": "path",
+            "description": "ID of ticket to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "ticket",
+            "in": "body",
+            "description": "Ticket object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
+          },
+          "404": {
+            "description": "Ticket not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["tickets"],
+        "summary": "Delete a ticket by id",
+        "description": "Delete a ticket by id",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "in": "path",
+            "description": "ID of ticket to delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Ticket not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": ["name", "email", "password", "roleId"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "default": "johndoe@example.com"
+        },
+        "password": {
+          "type": "string",
+          "default": "password123"
+        },
+        "roleId": {
+          "type": "integer",
+          "default": 1
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "required": ["event_name", "price", "start_date", "end_date"],
+      "properties": {
+        "event_name": {
+          "type": "string",
+          "default": "Event Name"
+        },
+        "price": {
+          "type": "number",
+          "default": 5000
+        },
+        "start_date": {
+          "type": "string",
+          "default": "2020-12-01"
+        },
+        "end_date": {
+          "type": "string",
+          "default": "2020-12-01"
+        }
+      }
+    },
+    "Ticket": {
+      "required": ["email", "total_ticket", "proof_of_payment", "status", "eventId", "name"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "default": "johndoe@example.com"
+        },
+        "total_ticket": {
+          "type": "integer",
+          "default": 1
+        },
+        "proof_of_payment": {
+          "type": "string",
+          "default": "https://example.com"
+        },
+        "status": {
+          "type": "string",
+          "default": "pending"
+        },
+        "eventId": {
+          "type": "integer",
+          "default": 1
+        },
+        "name": {
+          "type": "string",
+          "default": "John Doe"
+        }
+      }
+    }
+  }
+}
