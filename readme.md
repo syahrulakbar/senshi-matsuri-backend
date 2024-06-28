@@ -48,6 +48,10 @@ Start the server
   npm run dev
 ```
 
+## API Documentation
+
+[Documentation](http://localhost:3000/api-docs)
+
 ## Features
 
 - Multirole User
