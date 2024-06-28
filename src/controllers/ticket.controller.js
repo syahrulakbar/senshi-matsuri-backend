@@ -2,6 +2,7 @@ const supabase = require("../utils/supabase");
 const transporter = require("../utils/mail");
 const generateToken = require("../utils/generateToken");
 const { destroyImage } = require("../utils/cloudinary");
+const generatePdf = require("../utils/generatePdf");
 
 exports.addTicket = async (req, res) => {
   try {
@@ -191,25 +192,45 @@ exports.updateTicketById = async (req, res) => {
         return res.status(500).json({ error: "Failed to retrieve joined data" });
       }
 
-      const { name, email, event, token } = joinedData[0];
-      const { event_name } = event;
+      const { name, email, event, token, total_ticket } = joinedData[0];
+      const { event_name, price } = event;
+      const ticketPresale = await generatePdf({
+        name,
+        email,
+        ticket_purchased: total_ticket,
+        price,
+        event_name,
+        token,
+      });
 
       const mailOptions = {
-        from: process.env.EMAIL,
+        from: `Akita Japan Fest <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: "Token Tiket",
-        html: `
-        <p>Hello, <strong>${name || "Friend"}</strong>!</p>
-        <p>Arigathanks for purchasing the ticket for <strong>${
-          event_name || "Ticket Presale"
-        }</strong>. Your ticket token is <strong>${token || "000000"}</strong>.</p>
-        <p>Best regards,<br/>Senshi Matsuri</p>
+        subject: "Presale Ticket - Akita Japan Fest",
+        text: `
+Hello ${name || "Friend"},
+
+Thank you so much for purchasing a presale ticket for the Akita Japan Fest! We are thrilled to have you join us for this exciting event.
+
+Please find your QR code attached to this email. Show this QR code to the Akita Japan Fest team to exchange it for your physical tickets at the event.
+
+We look forward to seeing you there!
+
+Best regards,
+Akita Japan Fest
       `,
+        attachments: [
+          {
+            filename: `${name || "Akita"} - Ticket Presale.pdf`,
+            content: ticketPresale,
+          },
+        ],
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error("Error sending email: ", error);
+          throw new Error("Error sending email:", error.message);
         } else {
           console.log(`Email sent: ${info.response}`);
         }
@@ -237,5 +258,6 @@ exports.updateTicketById = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Error while updating ticket" });
+    throw new Error("Error while generating QR Code");
   }
 };
