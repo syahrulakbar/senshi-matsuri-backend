@@ -13,6 +13,7 @@ const corsOPTIONS = {
     "http://localhost:3000",
     "https://senshi-matsuri.vercel.app",
     "https://senshi-matsuri-x.vercel.app",
+    "https://akita-psi.vercel.app/",
   ],
   credentials: true,
 };
