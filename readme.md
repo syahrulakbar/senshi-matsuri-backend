@@ -50,7 +50,9 @@ Start the server
 
 ## API Documentation
 
-[Documentation](http://localhost:3000/api-docs)
+```bash
+  http://localhost:5000/api-docs
+```
 
 ## Features
 
