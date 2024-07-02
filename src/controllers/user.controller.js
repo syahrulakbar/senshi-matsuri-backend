@@ -96,6 +96,7 @@ exports.verifyResetPassword = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
   try {
+    const MINIMUM_TIME_BETWEEN_OTP_REQUESTS = 5 * 60 * 1000;
     const { data: response, error } = await supabase
       .from("users")
       .select("*")
@@ -111,6 +112,17 @@ exports.resetPassword = async (req, res) => {
         message: "Email Not Registered",
       });
     }
+    if (new Date() - new Date(response.last_request_otp) < MINIMUM_TIME_BETWEEN_OTP_REQUESTS) {
+      const remainingTime =
+        MINIMUM_TIME_BETWEEN_OTP_REQUESTS - (new Date() - new Date(response.last_request_otp));
+      return res.status(429).json({
+        message: `Please wait ${Math.ceil(
+          remainingTime / 1000,
+        )} seconds before requesting another OTP.`,
+        data: { remainingTime: Math.ceil(remainingTime / 1000) },
+      });
+    }
+
     while (true) {
       const token = generateToken(10);
       const { data: response, error } = await supabase
@@ -129,6 +141,7 @@ exports.resetPassword = async (req, res) => {
         const expiresISO = tomorrow.toISOString();
         req.body.reset_password = token;
         req.body.reset_password_expires = expiresISO;
+        req.body.last_request_otp = now.toISOString();
         break;
       }
     }

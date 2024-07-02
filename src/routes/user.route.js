@@ -6,7 +6,7 @@ module.exports = (app) => {
   });
 
   app.post("/api/login", userController.signIn);
-  app.post("/api/admin/login", userController.adminSignIn);
+  app.post("/api/ admin/login", userController.adminSignIn);
   app.post("/api/forget-password", userController.resetPassword); //email
   app.post("/api/reset-password/:token", userController.verifyResetPassword); //password
   app.get("/api/verify-token/:token", userController.verifyToken);
