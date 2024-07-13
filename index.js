@@ -9,12 +9,7 @@ const swaggerDocument = require("./swagger.json");
 const app = express();
 
 const corsOPTIONS = {
-  origin: [
-    "http://localhost:3000",
-    "https://senshi-matsuri.vercel.app",
-    "https://senshi-matsuri-x.vercel.app",
-    "https://akita-psi.vercel.app/",
-  ],
+  origin: ["http://localhost:3000", "https://akita-psi.vercel.app/"],
   credentials: true,
 };
 
@@ -25,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./src/routes/index.js")(app);
 app.get("/", (req, res) => {
-  res.send("Sensi Matsuri API");
+  res.send("Akita Japan Fest API");
 });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

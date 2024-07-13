@@ -17,10 +17,19 @@ exports.addTicket = async (req, res) => {
       return res.status(500).json({ error: "Failed to get data" });
     }
     if (event.end_date < new Date()) return res.status(400).json({ error: "Event has ended" });
-
+    const { eventId, name, email, total_ticket, proof_of_payment } = req.body;
     const { data: response, error } = await supabase
       .from("ticket")
-      .insert([{ ...req.body, status: "pending" }])
+      .insert([
+        {
+          eventId,
+          name,
+          email,
+          total_ticket,
+          proof_of_payment,
+          status: "pending",
+        },
+      ])
       .select();
 
     if (error) {
