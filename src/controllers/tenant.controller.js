@@ -9,7 +9,7 @@ exports.addTenant = async (req, res) => {
       .single();
 
     if (error) {
-      console.error("Error get data event:", error);
+      console.error("Error get data tenant:", error);
       return res.status(500).json({ error: "Failed to create tenant" });
     }
     return res.status(201).json({

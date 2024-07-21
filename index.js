@@ -9,7 +9,6 @@ const swaggerDocument = require("./swagger.json");
 const app = express();
 
 const corsOPTIONS = {
-  origin: ["http://localhost:3000", "https://akita-psi.vercel.app"],
   credentials: true,
 };
 

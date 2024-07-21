@@ -3,6 +3,41 @@ const transporter = require("../utils/mail");
 const generateToken = require("../utils/generateToken");
 const { destroyImage } = require("../utils/cloudinary");
 const generatePdf = require("../utils/generatePdf");
+const readFile = require("fs").readFileSync;
+const path = require("path");
+const ejs = require("ejs");
+const htmlTemplate = readFile(path.join(__dirname, "../utils/template.ejs"), "utf8");
+
+exports.sendEmail = async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    const htmlContent = ejs.render(htmlTemplate, { name });
+
+    const mailOptions = {
+      from: `Akita Japan Fest <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Medical Check UP - Akita Japan Fest",
+      html: htmlContent,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email: ", error);
+        throw new Error("Error sending email:", error.message);
+      } else {
+        console.log(`Email sent: ${info.response}`);
+      }
+    });
+
+    return res.status(200).json({
+      message: "Ticket updated successfully",
+      data: { mail: mailOptions },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Error while sending email" });
+  }
+};
 
 exports.addTicket = async (req, res) => {
   try {

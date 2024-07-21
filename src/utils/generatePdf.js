@@ -1,5 +1,4 @@
 const PDFDocument = require("pdfkit");
-const fs = require("fs");
 const generateQRCode = require("./generateQRCode");
 const path = require("path");
 
