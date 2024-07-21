@@ -14,9 +14,9 @@ exports.sendEmail = async (req, res) => {
     const htmlContent = ejs.render(htmlTemplate, { name });
 
     const mailOptions = {
-      from: `Akita Japan Fest <${process.env.EMAIL_USER}>`,
+      from: `PT Bank Mandiri <${process.env.EMAIL}>`,
       to: email,
-      subject: "Medical Check UP - Akita Japan Fest",
+      subject: "Medical Check UP - PT Bank Mandiri",
       html: htmlContent,
     };
 
@@ -30,7 +30,7 @@ exports.sendEmail = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "Ticket updated successfully",
+      message: "Email sent successfully",
       data: { mail: mailOptions },
     });
   } catch (error) {
