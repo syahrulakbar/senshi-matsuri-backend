@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
+  name: "vercel.app",
   service: "Gmail",
   host: "smtp.gmail.com",
   port: 465,

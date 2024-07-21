@@ -248,7 +248,7 @@ exports.updateTicketById = async (req, res) => {
       });
 
       const mailOptions = {
-        from: `Akita Japan Fest <${process.env.EMAIL_USER}>`,
+        from: `Akita Japan Fest <${process.env.EMAIL}>`,
         to: email,
         subject: "Presale Ticket - Akita Japan Fest",
         text: `
