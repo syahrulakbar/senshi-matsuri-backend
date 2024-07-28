@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
 const transporter = nodemailer.createTransport(
   smtpTransport({
-    name: "gmail",
+    name: "smtp.gmail.com",
     service: "Gmail",
     host: "smtp.gmail.com",
     port: 465,
