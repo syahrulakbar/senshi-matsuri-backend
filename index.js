@@ -9,6 +9,12 @@ const swaggerDocument = require("./swagger.json");
 const app = express();
 
 const corsOPTIONS = {
+  origin: [
+    "http://localhost:3000",
+    "https://akita-psi.vercel.app",
+    "https://senshi-matsuri.vercel.app",
+    "https://animated-gelato-8b5a0b.netlify.app",
+  ],
   credentials: true,
 };
 
