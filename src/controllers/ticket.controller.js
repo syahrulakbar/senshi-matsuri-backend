@@ -3,6 +3,7 @@ const transporter = require("../utils/mail");
 const generateToken = require("../utils/generateToken");
 const { destroyImage } = require("../utils/cloudinary");
 const generatePdf = require("../utils/generatePdf");
+const moment = require("moment");
 const readFile = require("fs").readFileSync;
 const path = require("path");
 const ejs = require("ejs");
@@ -10,8 +11,12 @@ const htmlTemplate = readFile(path.join(__dirname, "../utils/template.ejs"), "ut
 
 exports.sendEmail = async (req, res) => {
   try {
-    const { name, email, message } = req.body;
-    const htmlContent = ejs.render(htmlTemplate, { name });
+    const { name, email, time, date } = req.body;
+    const htmlContent = ejs.render(htmlTemplate, {
+      name,
+      time,
+      date: moment(date, "DD-MM-YYYY").format("dddd, LL"),
+    });
 
     const mailOptions = {
       from: `PT Bank Mandiri <${process.env.EMAIL}>`,
