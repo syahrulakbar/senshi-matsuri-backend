@@ -12,17 +12,29 @@ const htmlTemplate = readFile(path.join(__dirname, "../utils/template.ejs"), "ut
 exports.sendEmail = async (req, res) => {
   try {
     const { name, email, time, date } = req.body;
-    const htmlContent = ejs.render(htmlTemplate, {
-      name,
-      time,
-      date: moment(date, "DD-MM-YYYY").format("dddd, LL"),
-    });
+    // const htmlContent = ejs.render(htmlTemplate, {
+    //   name,
+    //   time,
+    //   date: moment(date, "DD-MM-YYYY").format("dddd, LL"),
+    // });
 
     const mailOptions = {
       from: `PT Bank Mandiri <${process.env.EMAIL}>`,
       to: email,
       subject: "Medical Check UP - PT Bank Mandiri",
-      html: htmlContent,
+      html: `
+        <h1>Medical Check Up | PT Bank Mandiri</h1>
+        <p>
+          Hi ${name}, <br />
+          <br />
+          Your Medical Check Up at ${time} on ${moment(date, "DD-MM-YYYY").format(
+        "dddd, LL",
+      )} is scheduled.
+        </p>
+        <p><strong>Location:</strong> Jl. Jend. Sudirman No. 54, Jakarta Selatan, 12190</p>
+        <p><strong>What to bring:</strong> Please bring your ID card</p>
+        <p><strong>Notes:</strong> Come 15 minutes before the appointment time.</p>
+      `,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
