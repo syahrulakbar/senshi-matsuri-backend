@@ -4,19 +4,10 @@ const generateToken = require("../utils/generateToken");
 const { destroyImage } = require("../utils/cloudinary");
 const generatePdf = require("../utils/generatePdf");
 const moment = require("moment");
-const readFile = require("fs").readFileSync;
-const path = require("path");
-const ejs = require("ejs");
-const htmlTemplate = readFile(path.join(__dirname, "../utils/template.ejs"), "utf8");
 
 exports.sendEmail = async (req, res) => {
   try {
     const { name, email, time, date } = req.body;
-    // const htmlContent = ejs.render(htmlTemplate, {
-    //   name,
-    //   time,
-    //   date: moment(date, "DD-MM-YYYY").format("dddd, LL"),
-    // });
 
     const mailOptions = {
       from: `PT Bank Mandiri <${process.env.EMAIL}>`,
@@ -37,14 +28,8 @@ exports.sendEmail = async (req, res) => {
       `,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email: ", error);
-        throw new Error("Error sending email:", error.message);
-      } else {
-        console.log(`Email sent: ${info.response}`);
-      }
-    });
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email sent: ${info.response}`);
 
     return res.status(200).json({
       message: "Email sent successfully",
