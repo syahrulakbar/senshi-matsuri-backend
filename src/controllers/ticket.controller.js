@@ -5,6 +5,90 @@ const { destroyImage } = require("../utils/cloudinary");
 const generatePdf = require("../utils/generatePdf");
 const moment = require("moment");
 
+exports.sendEmailResult = async (req, res) => {
+  try {
+    const { name, email, time, date } = req.body;
+    const results = [
+      {
+        name: "Blood Pressure",
+        value: "120/80 mmHg",
+      },
+      {
+        name: "Blood Sugar",
+        value: "90 mg/dL",
+      },
+      {
+        name: "Cholesterol",
+        value: "200 mg/dL",
+      },
+      {
+        name: "BMI",
+        value: "22.5 kg/m2",
+      },
+      {
+        name: "Heart Rate",
+        value: "75 bpm",
+      },
+      {
+        name: "Temperature",
+        value: "36.5 °C",
+      },
+    ];
+
+    const mailOptions = {
+      from: `PT Bank Mandiri <${process.env.EMAIL}>`,
+      to: email,
+      subject: "Result Mini MCU - PT Bank Mandiri",
+      html: `
+        <h1>Result Mini Medical Check Up | PT Bank Mandiri</h1>
+        <p>Dear <strong>${name}</strong>,</p>
+
+        <p>We hope this message finds you well.</p>
+        <p>We are pleased to provide you with the results of your Medical Check-Up conducted on <strong>${moment(
+          date,
+          "DD-MM-YYYY",
+        ).format(
+          "dddd, LL",
+        )} </strong> at <strong>${time}</strong> with PT Bank Mandiri. Below is a summary of your health examination:</p>
+
+        <h2>Health Examination Results:</h2>
+        <ul>
+        ${results
+          .map(
+            (result) => `
+          <li><strong>${result.name}</strong>: ${result.value}</li>
+        `,
+          )
+          .join("")}
+        </ul>
+
+        <p>We sincerely thank you for participating in the Mini Medical Check-Up at PT Bank Mandiri.</p>
+
+        <p>Should you have any further questions or require clarification regarding these results, please do not hesitate to contact us.</p>
+
+        <p>Thank you once again for taking part in the Mini Medical Check-Up.</p>
+
+        <p>Wishing you good health,</p>
+
+        <>Best Regards,<br />
+        PT Bank Mandiri<br>
+        +62-815-4896-2893 (Mochamad Syahrul Akbar)</p>
+        
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email sent: ${info.response}`);
+
+    return res.status(200).json({
+      message: "Email sent successfully",
+      data: { mail: mailOptions },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Error while sending email" });
+  }
+};
 exports.sendEmail = async (req, res) => {
   try {
     const { name, email, time, date } = req.body;
