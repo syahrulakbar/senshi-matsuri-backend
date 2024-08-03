@@ -13,6 +13,7 @@ const corsOPTIONS = {
     "https://akita-psi.vercel.app",
     "https://senshi-matsuri.vercel.app",
     "https://holadok-two.vercel.app",
+    "http://127.0.0.1:5500",
   ],
   credentials: true,
 };

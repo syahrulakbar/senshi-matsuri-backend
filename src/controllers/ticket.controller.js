@@ -7,33 +7,22 @@ const moment = require("moment");
 
 exports.sendEmailResult = async (req, res) => {
   try {
-    const { name, email, time, date } = req.body;
-    const results = [
-      {
-        name: "Blood Pressure",
-        value: "120/80 mmHg",
-      },
-      {
-        name: "Blood Sugar",
-        value: "90 mg/dL",
-      },
-      {
-        name: "Cholesterol",
-        value: "200 mg/dL",
-      },
-      {
-        name: "BMI",
-        value: "22.5 kg/m2",
-      },
-      {
-        name: "Heart Rate",
-        value: "75 bpm",
-      },
-      {
-        name: "Temperature",
-        value: "36.5 °C",
-      },
-    ];
+    const {
+      name,
+      email,
+      time,
+      date,
+      weight,
+      height,
+      bmi,
+      gulaDarah,
+      kolestrol,
+      asamUrat,
+      bloodPressure,
+      rujukan,
+      resepObat,
+      consultationResult,
+    } = req.body;
 
     const mailOptions = {
       from: `PT Bank Mandiri <${process.env.EMAIL}>`,
@@ -53,13 +42,32 @@ exports.sendEmailResult = async (req, res) => {
 
         <h2>Health Examination Results:</h2>
         <ul>
-        ${results
-          .map(
-            (result) => `
-          <li><strong>${result.name}</strong>: ${result.value}</li>
-        `,
-          )
-          .join("")}
+          <li><strong>Weight</strong>: ${weight}</li>
+          <li><strong>Height</strong>: ${height}</li>
+          <li><strong>BMI</strong>: ${bmi}</li>
+          <li><strong>Blood Pressure</strong>: ${bloodPressure}</li>
+          <li><strong>Gula Darah</strong>: ${gulaDarah}</li>
+          <li><strong>Kolestrol</strong>: ${kolestrol}</li>
+          <li><strong>Asam Urat</strong>: ${asamUrat}</li>
+          ${
+            consultationResult &&
+            `
+            <li><strong>Consultation Result</strong>: ${consultationResult}</li>
+            `
+          }
+          ${
+            rujukan &&
+            `
+            <li><strong>Rujukan</strong>: ${rujukan}</li>
+            `
+          }
+          ${
+            resepObat &&
+            `
+            <li><strong>Resep Obat</strong>: ${resepObat}</li>
+            `
+          }
+
         </ul>
 
         <p>We sincerely thank you for participating in the Mini Medical Check-Up at PT Bank Mandiri.</p>
@@ -70,9 +78,11 @@ exports.sendEmailResult = async (req, res) => {
 
         <p>Wishing you good health,</p>
 
-        <>Best Regards,<br />
+        <p>
+        Best Regards,<br />
         PT Bank Mandiri<br>
-        +62-815-4896-2893 (Mochamad Syahrul Akbar)</p>
+        +62-815-4896-2893 (Mochamad Syahrul Akbar)
+        </p>
         
       `,
     };
