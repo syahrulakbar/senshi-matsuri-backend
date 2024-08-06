@@ -14,6 +14,8 @@ const corsOPTIONS = {
     "https://senshi-matsuri.vercel.app",
     "https://holadok-two.vercel.app",
     "http://127.0.0.1:5500",
+    "https://mandiriclick-pilot.csod.com",
+    "https://mandiriclick.csod.com",
   ],
   credentials: true,
 };
