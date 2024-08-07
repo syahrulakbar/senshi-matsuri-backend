@@ -22,6 +22,7 @@ exports.sendEmailResult = async (req, res) => {
       rujukan,
       resepObat,
       consultationResult,
+      saturasiOksigen,
     } = req.body;
 
     const mailOptions = {
@@ -49,6 +50,7 @@ exports.sendEmailResult = async (req, res) => {
           <li><strong>Gula Darah</strong>: ${gulaDarah}</li>
           <li><strong>Kolestrol</strong>: ${kolestrol}</li>
           <li><strong>Asam Urat</strong>: ${asamUrat}</li>
+          <li><strong>Saturasi Oksigen</strong>: ${saturasiOksigen}</li>
           ${
             consultationResult &&
             `
@@ -81,7 +83,7 @@ exports.sendEmailResult = async (req, res) => {
         <p>
         Best Regards,<br />
         PT Bank Mandiri<br>
-        +62-815-4896-2893 (Mochamad Syahrul Akbar)
+        +62-21-52997777
         </p>
         
       `,
@@ -116,8 +118,8 @@ exports.sendEmail = async (req, res) => {
         "dddd, LL",
       )} is scheduled.
         </p>
-        <p><strong>Location:</strong> Jl. Jend. Sudirman No. 54, Jakarta Selatan, 12190</p>
-        <p><strong>What to bring:</strong> Please bring your ID card</p>
+        <p><strong>Location:</strong>Basement 2 (depan parkiran mobil dekat eskalator) <br /> Kantor Pusat Plaza Mandiri <br /> Jenderal Gatot Subroto Street Kav. 36-38 <br /> Jakarta 12190 Indonesia</p>
+        <p><strong>What to bring:</strong> Please bring your KTP (Identity Card), ID Card Bank Mandiri, and proof of registration</p>
         <p><strong>Notes:</strong> Come 15 minutes before the appointment time.</p>
       `,
     };
