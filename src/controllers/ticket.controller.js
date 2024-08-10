@@ -103,7 +103,7 @@ exports.sendEmailResult = async (req, res) => {
 };
 exports.sendEmail = async (req, res) => {
   try {
-    const { name, email, time, date } = req.body;
+    const { name, email, time, date, location, detailLocation } = req.body;
 
     const mailOptions = {
       from: `PT Bank Mandiri <${process.env.EMAIL}>`,
@@ -118,7 +118,9 @@ exports.sendEmail = async (req, res) => {
         "dddd, LL",
       )} is scheduled.
         </p>
-        <p><strong>Location:</strong>Basement 2 (depan parkiran mobil dekat eskalator) <br /> Kantor Pusat Plaza Mandiri <br /> Jenderal Gatot Subroto Street Kav. 36-38 <br /> Jakarta 12190 Indonesia</p>
+        <p><strong>Location:</strong></p>
+        <p>${location}</p>
+        <p>${detailLocation}</p>
         <p><strong>What to bring:</strong> Please bring your KTP (Identity Card), ID Card Bank Mandiri, and proof of registration</p>
         <p><strong>Notes:</strong> Come 15 minutes before the appointment time.</p>
       `,
