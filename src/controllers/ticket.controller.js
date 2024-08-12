@@ -30,17 +30,15 @@ exports.sendEmailResult = async (req, res) => {
       to: email,
       subject: "Result Mini MCU - PT Bank Mandiri",
       html: `
-        <h1>Result Mini Medical Check Up | PT Bank Mandiri</h1>
+        <h1>Result Mini Medical Check Up | Maniri Well-being Program</h1>
         <p>Dear <strong>${name}</strong>,</p>
 
-        <p>We hope this message finds you well.</p>
-        <p>We are pleased to provide you with the results of your Medical Check-Up conducted on <strong>${moment(
+        <p>Terima kasih telah berpartisipasi dalam kegiatan Mandiri Well-being Program - Mini Medical Check Up untuk pegawai dibawah 40 tahun.</p>
+        <p>Berikut adalah hasil Medical Check Up Anda yang dilaksanakan pada <strong>${moment(
           date,
           "DD-MM-YYYY",
-        ).format(
-          "dddd, LL",
-        )} </strong> at <strong>${time}</strong> with PT Bank Mandiri. Below is a summary of your health examination:</p>
-
+        ).format("dddd, LL")}, ${time}</strong></p>
+       
         <h2>Health Examination Results:</h2>
         <ul>
           <li><strong>Weight</strong>: ${weight}</li>
@@ -72,18 +70,14 @@ exports.sendEmailResult = async (req, res) => {
 
         </ul>
 
-        <p>We sincerely thank you for participating in the Mini Medical Check-Up at PT Bank Mandiri.</p>
-
-        <p>Should you have any further questions or require clarification regarding these results, please do not hesitate to contact us.</p>
-
-        <p>Thank you once again for taking part in the Mini Medical Check-Up.</p>
-
-        <p>Wishing you good health,</p>
+        <p>
+        Jika terdapat pertanyaan lebih lanjut dapat menghubungi HC4U 150055 ext. 4 atau <i>walk-in</i> di Plaza Mandiri Lantai 12.
+        </p>
 
         <p>
-        Best Regards,<br />
-        PT Bank Mandiri<br>
-        +62-21-52997777
+        Salam,<br />
+        Mini Medical Check Up Project Team<br>
+        <i>"We care for you, we understand you, we are here for you"</i>
         </p>
         
       `,
@@ -110,7 +104,7 @@ exports.sendEmail = async (req, res) => {
       to: email,
       subject: "Medical Check UP - PT Bank Mandiri",
       html: `
-        <h1>Medical Check Up | PT Bank Mandiri</h1>
+        <h1>Medical Check Up | Mandiri Well-being Program</h1>
         <p>
           Hi ${name}, <br />
           <br />
@@ -119,10 +113,10 @@ exports.sendEmail = async (req, res) => {
       )} is scheduled.
         </p>
         <p><strong>Location:</strong></p>
-        <p>${location}</p>
-        <p>${detailLocation}</p>
+        <p>${location}<br />${detailLocation}</p>
         <p><strong>What to bring:</strong> Please bring your KTP (Identity Card), ID Card Bank Mandiri, and proof of registration</p>
         <p><strong>Notes:</strong> Come 15 minutes before the appointment time.</p>
+        <p>Salam,<br />Mini Medical Check Up Project Team<br /><i>"We care for you, we understand you, we are here for you"</i></p>
       `,
     };
 
